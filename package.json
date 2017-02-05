@@ -22,6 +22,6 @@
     "nodemailer": "^3.0.0"
   },
   "scripts": {
-    "start": "node public/main.js"
+    "start": "node server.js"
   }
 }
