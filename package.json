@@ -1,0 +1,27 @@
+{
+  "name": "locationservice",
+  "version": "1.0.0",
+  "keywords": [
+    "util",
+    "functional",
+    "server",
+    "client",
+    "browser"
+  ],
+  "author": "salah-lab",
+  "contributors": [],
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "connect": "^3.5.0",
+    "crypto": "0.0.3",
+    "csprng": "^0.1.2",
+    "express": "^4.14.1",
+    "gravatar": "^1.6.0",
+    "http-status-code": "^2.1.0",
+    "mongodb": "^2.2.22",
+    "nodemailer": "^3.0.0"
+  },
+  "scripts": {
+    "start": "node public/main.js"
+  }
+}
