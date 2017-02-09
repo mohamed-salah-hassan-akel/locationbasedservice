@@ -1,6 +1,7 @@
 // create  update delete and retrieve operation on our database
-var crudeOperations = require('./database-operations');
+var crudeOperations = require('./public/database-operations');
 
+var signupNewUser = require('');
 // user document schema that will be stored in our database
 var userSchema = require('./user-schema');
 /*
@@ -25,27 +26,6 @@ function handleError(res, reason, message, code) {
     console.log(error + reason);
     res.status(code || 500).json({'error': message});
 }
-exports.insert =function (){
-app.post('/signup', function (req, res) {
-    var firstname, lastName, useMail, userPass, userCountry, userCity;
-    firstname = req.body.fname;
-    lastName = req.body.lname;
-    useMail = req.body.umail;
-    userPass = req.body.password;
-    userCountry = req.body.country;
-    userCity = req.body.City;
-    userSchema.createUser(firstname, lastName, useMail, userPass, userCountry,
-            userCity,function(user){
-                
-                crudeOperations.insert(dbName,dbCollectionName,user);
-                res.end("inserting done");
-            });
-            
-           
-});
-};
-app.get('/')
-
 
 
 

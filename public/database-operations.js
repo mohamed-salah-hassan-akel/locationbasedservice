@@ -29,13 +29,16 @@ var connect = function(databaseNameUserName, databaseCallback){
     
 };
 
+// general insert many documents in mongodb collection that you
+/*
+ * 
+ */
 exports.insert = function(datbaseName,collectionName,insertQuery){
     connect(datbaseName,function(database){
         var collection = database.collection(collectionName);
-        collection.insertOne(insertQuery,function(err, r){
+        collection.insertMany([insertQuery],function(err, r){
             assert.equal(null,err);
             assert.equal(1,r.insertedCount);
-            console.log('insert succesfully');
             database.close();
         });
         
@@ -43,5 +46,26 @@ exports.insert = function(datbaseName,collectionName,insertQuery){
     });
     
 };
+/*
+ * 
+ */
+exports.find = function(databaseName,collectionName,query,findCallback){
+    connect(databaseName,collectionName,function (database){
+        var collection = database.collection(collectionName);
+        collection.find(query,function (error,doc){
+            assert.equal(null,error);
+            findCallback(doc);
+            database.close();
+        });
+    });
+};
+/*
+ * 
+ */
+exports.update = function(){};
 
+/*
+ * 
+ */
+exports.delete = function(){};
 
