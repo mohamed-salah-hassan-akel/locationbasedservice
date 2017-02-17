@@ -1,11 +1,14 @@
 var express = require('express'),
-        http = require('http'),
         app = express();
 
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080,
-        ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
-app.listen(port,ip, function (){
-    app.get('/', function(req, res){
-        res.send("hello world");
-    });
+var port = process.env.PORT || 8080;
+
+app.use(express.static(__dirname));
+
+app.get('/', function(req, res){
+    res.send("hello world");
+});
+
+app.listen(port, function(){
+    console.log("server running on %s", port);
 });
