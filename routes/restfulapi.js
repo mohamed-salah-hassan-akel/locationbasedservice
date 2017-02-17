@@ -3,6 +3,9 @@ var assert = require('assert');
 var signupLoginOpt = require('../public/signup-loginCheck');
 
 var restRouter = function (app){
+    app.get('/', function(req,res){
+    res.send("Geo-location API Welcome you to our space");
+});
 
 // POST Method to enter user details and then will be stroed in database
 app.post('/signup', function (req, res) {
