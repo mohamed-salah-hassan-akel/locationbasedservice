@@ -13,10 +13,10 @@ var assert = require('assert');
  * @param3 
  * 
  */
-var connect = function(databaseNameUserName, databaseCallback){
+var connect = function(databaseName, databaseCallback){
     //
     var dbUrl = 'mongodb://salah:programming2015@ds139909.mlab.com:39909/'
-            + databaseNameUserName;
+            + databaseName;
     /*
      * 
      */
@@ -50,7 +50,7 @@ exports.insert = function(datbaseName,collectionName,insertQuery){
  * 
  */
 exports.find = function(databaseName,collectionName,query,findCallback){
-    connect(databaseName,collectionName,function (database){
+    connect(databaseName,function (database){
         var collection = database.collection(collectionName);
         collection.find(query,function (error,doc){
             assert.equal(null,error);
@@ -63,7 +63,7 @@ exports.find = function(databaseName,collectionName,query,findCallback){
  * 
  */
 exports.update = function(datbaseName,collectionName,query){
-    connect(datbaseName,collectionName,function (database){
+    connect(datbaseName,function (database){
         var collection = database.collection(collectionName);
         collection.update(query,function(err){
             assert.equal(null,err);
@@ -76,7 +76,7 @@ exports.update = function(datbaseName,collectionName,query){
  * 
  */
 exports.delete = function(datbaseName,collectionName,query){
-    connect(datbaseName,collectionName,function(database){
+    connect(datbaseName,function(database){
         var collection = database.collection(collectionName);
         collection.remove(query,function(err){
             assert.equal(null,err);

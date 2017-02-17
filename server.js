@@ -1,12 +1,15 @@
 var express = require('express'),
-        app = express();
+        app = express(),
+        bodyParser = require('body-parser');
+
+var assert = require('assert');
 
 var port = process.env.PORT || 8080;
-app.use(express.static(__dirname + "/models"));
-app.use(express.static(__dirname + "/routes"));
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
-var restfulAPI = require('./routes');
+var restapiRoutes = require('./routes/restfulapi')(app);
 
 app.listen(port, function(){
     console.log("server running on %s", port);
