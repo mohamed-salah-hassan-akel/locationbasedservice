@@ -1,10 +1,10 @@
 // hashing module
 var crypto = require('crypto');
 // add user in database object
-var addUser = require('../public/user-schema');
+var addUser = require('../models/user-schema');
 var assert = require('assert');
 // database operations object 
-var db = require('../public/database-operations');
+var db = require('../models/database-operations');
 var dbName = 'locationappdb';
 var colName ='usersCol';
 // to add random string to password then hashing both using SHA512
@@ -58,7 +58,7 @@ city,callback){
  */
 exports.login = function(userEmail, userPass, loginCallback){
     db.find(dbName, colName, {'userMail':userEmail},function(err,user){
-       if(user.length!= 0){
+       if(user.length!== 0){
            var temp = user[0].salt;
            var dbHasehd = user[0].userPassword;
            var userToken = user[0].token;
@@ -66,7 +66,7 @@ exports.login = function(userEmail, userPass, loginCallback){
            var hashedPassword =crypto.createHash('sha512').update(newPass)
                    .digest('hex');
            var gravUrl = gravater.url(userEmail,{s:'200',r:'pg',d:404});
-           if(dbHasehd == hashedPassword){
+           if(dbHasehd === hashedPassword){
                loginCallback({'response':'Login Success','res':true,
                    'token':userToken,'grav':gravUrl});
            }else{

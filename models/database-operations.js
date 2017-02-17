@@ -62,10 +62,26 @@ exports.find = function(databaseName,collectionName,query,findCallback){
 /*
  * 
  */
-exports.update = function(){};
+exports.update = function(datbaseName,collectionName,query){
+    connect(datbaseName,collectionName,function (database){
+        var collection = database.collection(collectionName);
+        collection.update(query,function(err){
+            assert.equal(null,err);
+            database.close();
+        });
+    });
+};
 
 /*
  * 
  */
-exports.delete = function(){};
+exports.delete = function(datbaseName,collectionName,query){
+    connect(datbaseName,collectionName,function(database){
+        var collection = database.collection(collectionName);
+        collection.remove(query,function(err){
+            assert.equal(null,err);
+            database.close();
+        });
+    } );
+};
 

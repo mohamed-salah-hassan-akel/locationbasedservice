@@ -7,16 +7,16 @@
 
 var counter = 0;
 exports.createUser = function (firstName, lastname, eMail,
-        password, country, city,userToken,userSalt, callback) {
+        password, country, city, userToken, userSalt, callback) {
 
     var user = {
-        '_id': 'user' + (counter + 1) + 'lW',
+        '_id': 'loc_user' + (counter + 1) + 'lW',
         'name': {
             'fName': firstName,
             'lName': lastname
         },
-        'token':userToken,
-        'salt':userSalt
+        'token': userToken,
+        'salt': userSalt
         ,
         'userMail': eMail,
         'userPassword': password,
@@ -24,17 +24,22 @@ exports.createUser = function (firstName, lastname, eMail,
             'userCountry': country,
             'userCity': city
         }
-        , 'favoritList': [{'place_id': ""}], 
-        'visitedPlces': [{'place_id': "", 'visiting_date': ""}]
+        , 'favoritList': [{'place_id': ""}],
+        'visitedPlces': [{'place_id': "", 'visiting_date': ""}],
+        'checkIns': [{
+                'placeId': ""
+
+            }]
+
 
     };
     callback(user);
-    
+
 };
 
-exports.createUserHistory = function (userId,queryText, keywords,historyCallback) {
+exports.createUserHistory = function (userId, queryText, keywords, historyCallback) {
 
-    var userHistory ={
+    var userHistory = {
         '_id': "history" + (counter + 1) + 'lw',
         'userId': userId,
         'userQueries': [
@@ -43,16 +48,16 @@ exports.createUserHistory = function (userId,queryText, keywords,historyCallback
     };
     historyCallback(userHistory);
 };
-exports.createUserRates = function(userID,placeID,score, rateTime,rateCallback){
-    var userRates ={
-    '_id': "rate"+ (counter + 1) + 'lw',
-    'user_id': userID,
-    'rated_places': [{ 'place_id': placeID, 'rating_score': score, 'rate_time': rateTime }]
-};
+exports.createUserRates = function (userID, placeID, score, rateTime, rateCallback) {
+    var userRates = {
+        '_id': "rate" + (counter + 1) + 'lw',
+        'user_id': userID,
+        'rated_places': [{'place_id': placeID, 'rating_score': score, 'rate_time': rateTime}]
+    };
 
     rateCallback(userRates);
 };
 
-exports.createPlace = function(){};
+exports.createPlace = function () {};
 
 
