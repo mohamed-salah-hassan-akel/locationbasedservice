@@ -5,7 +5,7 @@ var addUser = require('../models/user-schema');
 var assert = require('assert');
 // database operations object 
 var db = require('../models/database-operations');
-var dbName = 'locationappdb';
+
 var colName = 'usersCol';
 // to add random string to password then hashing both using SHA512
 var rand = require('csprng');
@@ -49,7 +49,7 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
                     addUser.createUser(firstName, lastName, userEmail
                             , hashedPassword, country, city,gender, token, temp, function (err, user) {
                                 assert.equal(null, err);
-                                db.insert(dbName, colName, user,function(){
+                                db.insert( colName, user,function(){
                                     signcallback({'res': 'Successfully Registered'});
                                 });
                                 
@@ -74,7 +74,7 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
  */
 exports.login = function(umail,password, callback){
     
-    db.find(dbName,colName, {userMail:umail}, function(user){
+    db.find(colName, {userMail:umail}, function(user){
         if(user){
             var temp = user.salt;
             var hashDb = user.userPassword;
@@ -99,7 +99,7 @@ exports.changePassword = function (id, oldPass,newPassword,callback) {
     var temp1 = rand(166, 36);
     var newPass = newPassword + temp1;
     var nHashedPass = crypto.createHash('sha512').update(newPass).digest('hext');
-    db.find(dbName, colName, {token:id},function(user){
+    db.find( colName, {token:id},function(user){
         if(user){
             var temp = user.salt;
             var hashedDb = user.userPassword;
@@ -110,7 +110,7 @@ exports.changePassword = function (id, oldPass,newPassword,callback) {
                 if(String(newPassword).match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)&&
                         Array(newPassword).length > 6 && String(newPassword).
                         match(/0-9/)&&String(newPassword).match(/.[!,@,#,$,%,^,&,*,?,_,~]/)){
-                    db.updateOne(dbName,colName,
+                    db.updateOne(colName,
                     "{id:"+id+"},{$set:{salt:"+temp1+",userPassword:"+nHashedPass+"}}"
                             ,function(){
                                 callback({'response':"Password Sucessfully Changed",'res':true})
