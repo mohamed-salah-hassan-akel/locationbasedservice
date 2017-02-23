@@ -1,87 +1,70 @@
-
-// To connect Mongodb instance
 var MongoClient = require('mongodb').MongoClient;
-
-// to handle exceptions or make sure the result will be correct
 var assert = require('assert');
 
-/*
- * connect method take url of your database server and the name of user in
- * current database
- * @param1 url - url or location of your database server
- * @param2 databaseNameUserName - user of DBMS or user from your creation
- * @param3 
- * 
- */
-var connect = function(databaseName, databaseCallback){
-    //
-    var dbUrl = 'mongodb://salah:programming2015@ds139909.mlab.com:39909/'
-            + databaseName;
-    /*
-     * 
-     */
-    MongoClient.connect(dbUrl, function(error, database){
-        //
-        assert.equal(null,error);
-        console.log("connection is established correctly");
-        databaseCallback(database);
-    });
-    
-};
+var dbUrl = 'mongodb://salah:programming2015@ds139909.mlab.com:39909/';
 
-// general insert many documents in mongodb collection that you
-/*
- * 
- */
-exports.insert = function(datbaseName,collectionName,insertQuery){
-    connect(datbaseName,function(database){
-        var collection = database.collection(collectionName);
-        collection.insertMany([insertQuery],function(err, r){
+exports.find = function (database,colName,query,callback){
+    MongoClient.connect(dbUrl+database, function (err,db){
+        assert.equal(null,err);
+        var cursor = db.collection(colName).find(query);
+        cursor.each(function (err, doc){
             assert.equal(null,err);
-            assert.equal(1,r.insertedCount);
-            database.close();
+            if(doc!==null){
+                callback(doc);
+            }else{callback();}
         });
-        
-        
-    });
-    
-};
-/*
- * 
- */
-exports.find = function(databaseName,collectionName,query,findCallback){
-    connect(databaseName,function (database){
-        var collection = database.collection(collectionName);
-        collection.find(query,function (error,doc){
-            assert.equal(null,error);
-            findCallback(doc);
-            database.close();
-        });
-    });
-};
-/*
- * 
- */
-exports.update = function(datbaseName,collectionName,query){
-    connect(datbaseName,function (database){
-        var collection = database.collection(collectionName);
-        collection.update(query,function(err){
-            assert.equal(null,err);
-            database.close();
-        });
+        db.close();
     });
 };
 
-/*
+exports.Insert = function(dbName,colName,query,callback){
+    MongoClient.connect(dbUrl+dbName, function(err,db){
+        assert.equal(null,err);
+        db.collection(colName).insertMany(query,function(err,result){
+            assert.equal(err,null);
+            console.log("inserted sucessfully");
+            callback();
+        });
+        db.close();
+    });
+};
+/**
+ * updates functions
+ * ************************
+ * 
  * 
  */
-exports.delete = function(datbaseName,collectionName,query){
-    connect(datbaseName,function(database){
-        var collection = database.collection(collectionName);
-        collection.remove(query,function(err){
-            assert.equal(null,err);
-            database.close();
-        });
-    } );
+exports.updateOne = function(dbName,colName,query,callback){
+   MongoClient.connect(dbUrl+dbName, function(err,db){
+       assert.equal(err,null);
+       db.collection(colName).updateOne(query, function(err,results){
+           assert.equal(err,null);
+           console.log(results);
+           callback();
+       });
+       db.close();
+   });
 };
 
+exports.updateMany = function(dbName,colName,query,callback){
+   MongoClient.connect(dbUrl+dbName, function(err,db){
+       assert.equal(err,null);
+       db.collection(colName).updateMany(query, function(err,results){
+           assert.equal(err,null);
+           console.log(results);
+           callback();
+       });
+       db.close();
+   });
+};
+
+exports.deleteOne = function(dbName,colName,query,callback){
+    MongoClient.connect(dbUrl+dbName, function(err,db){
+        assert.equal(err,null);
+        db.collection(colName).deleteOne(query, function(err,results){
+            console.log(results);
+            callback();
+        });
+        db.close();
+    });
+};

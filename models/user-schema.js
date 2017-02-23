@@ -7,56 +7,47 @@
 
 var counter = 0;
 exports.createUser = function (firstName, lastname, eMail,
-        password, country, city, userToken, userSalt, callback) {
+        password, country, city, gender, userToken, userSalt, callback) {
+    var userId = 'loc_user' + (counter + 1) + 'lW';
 
-    var user = {
-        '_id': 'loc_user' + (counter + 1) + 'lW',
-        'name': {
-            'fName': firstName,
-            'lName': lastname
+    var user = [{
+            'id': userId,
+            'name': {
+                'fName': firstName,
+                'lName': lastname
+            },
+            'token': userToken,
+            'salt': userSalt
+            ,
+            'userMail': eMail,
+            'userPassword': password,
+            'userAdress': {
+                'userCountry': country,
+                'userCity': city
+            },
+            'userGender': gender
+            , 'favoritList': [{'place_id': ""}],
+            'visitedPlces': [{'place_id': "", 'visiting_date': ""}],
+            'checkIns': [{
+                    'placeId': ""
+
+                }]
         },
-        'token': userToken,
-        'salt': userSalt
-        ,
-        'userMail': eMail,
-        'userPassword': password,
-        'userAdress': {
-            'userCountry': country,
-            'userCity': city
-        }
-        , 'favoritList': [{'place_id': ""}],
-        'visitedPlces': [{'place_id': "", 'visiting_date': ""}],
-        'checkIns': [{
-                'placeId': ""
-
-            }]
-
-
-    };
+        {
+            'userId': userId,
+            'userQueries': [
+                {'queryTxt': queryText, 'filtersKeywords': keywords}
+            ]
+        }, {
+            'user_id': userId,
+            'rated_places': [{'place_id': placeID, 'rating_score': score, 'rate_time': rateTime}]
+        }];
     callback(user);
 
 };
 
-exports.createUserHistory = function (userId, queryText, keywords, historyCallback) {
 
-    var userHistory = {
-        '_id': "history" + (counter + 1) + 'lw',
-        'userId': userId,
-        'userQueries': [
-            {'queryTxt': queryText, 'filtersKeywords': keywords}
-        ]
-    };
-    historyCallback(userHistory);
-};
-exports.createUserRates = function (userID, placeID, score, rateTime, rateCallback) {
-    var userRates = {
-        '_id': "rate" + (counter + 1) + 'lw',
-        'user_id': userID,
-        'rated_places': [{'place_id': placeID, 'rating_score': score, 'rate_time': rateTime}]
-    };
 
-    rateCallback(userRates);
-};
 
 exports.createPlace = function () {};
 

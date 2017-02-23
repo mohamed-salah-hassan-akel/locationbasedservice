@@ -12,7 +12,15 @@ var rand = require('csprng');
 
 var gravater = require('gravatar');
 
+var nodemailer = require('nodemailer');
 
+/*var smtpTransport = nodemailer.createTransport("SMTP",{
+    auth:{
+        user:"user@mail.com",
+        passwoord:"**********"
+    }
+});
+*/
 
 
 // export signup function to be used in any file of project
@@ -21,7 +29,7 @@ var gravater = require('gravatar');
  */
 
 exports.signup = function (firstName, lastName, userEmail, userPassword, country,
-        city, signcallback) {
+        city,gender,signcallback) {
 
 
     var email = userEmail;
@@ -39,10 +47,12 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
                 var len = Array(users).length;
                 if (len === 0) {
                     addUser.createUser(firstName, lastName, userEmail
-                            , hashedPassword, country, city, token, temp, function (err, user) {
+                            , hashedPassword, country, city,gender, token, temp, function (err, user) {
                                 assert.equal(null, err);
-                                db.insert(dbName, colName, user);
-                                signcallback({'res': 'Successfully Registered'});
+                                db.insert(dbName, colName, user,function(){
+                                    signcallback({'res': 'Successfully Registered'});
+                                });
+                                
                             });
 
 
@@ -62,29 +72,63 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
 /*
  * 
  */
-exports.login = function (userEmail, userPass, loginCallback) {
-    db.find(dbName, colName, {'userMail': userEmail}, function (user) {
-        if (Array(user).length !== 0) {
-            var temp = user[0].salt;
-            var dbHasehd = user[0].userPassword;
-            var userToken = user[0].token;
-            var newPass = temp + userPass;
-            var hashedPassword = crypto.createHash('sha512').update(newPass)
-                    .digest('hex');
-            var gravUrl = gravater.url(userEmail, {s: '200', r: 'pg', d: 404});
-            if (dbHasehd === hashedPassword) {
-                loginCallback({'response': 'Login Success', 'res': true,
-                    'token': userToken, 'grav': gravUrl});
-            } else {
-                loginCallback({'response': 'Invalid Password', 'res': false});
+exports.login = function(umail,password, callback){
+    
+    db.find(dbName,colName, {userMail:umail}, function(user){
+        if(user){
+            var temp = user.salt;
+            var hashDb = user.userPassword;
+            var id = user.token;
+            var newPass = temp + password;
+            var hashedPass = crypto.createHash('sha512').update(String(newPass))
+                    .digest("hex");
+            var grav_url = gravater.url(umail,{s:'200', r:'pg', d:'404}'});
+            if(hashDb == hashedPass){
+                callback({'response':"Login Sucess",'res':true,'token':id,'grav':grav_url});
             }
-        } else {
-            loginCallback({'response': 'User Not Exist', 'res': false});
+            else{
+                callback({'response':"Invalid Password",'res':false});
+            }
+        }else{
+            callback({'response':"User not exist",'res':false});
         }
-
     });
 };
 
-exports.changePassword = function () {
+exports.changePassword = function (id, oldPass,newPassword,callback) {
+    var temp1 = rand(166, 36);
+    var newPass = newPassword + temp1;
+    var nHashedPass = crypto.createHash('sha512').update(newPass).digest('hext');
+    db.find(dbName, colName, {token:id},function(user){
+        if(user){
+            var temp = user.salt;
+            var hashedDb = user.userPassword;
+            var oldNewPass = temp + oldPass;
+            var oHashedPass = crypto.createHash('sha512').update(oldNewPass)
+                    .digest('hex');
+            if(hashedDb == oHashedPass){
+                if(String(newPassword).match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)&&
+                        Array(newPassword).length > 6 && String(newPassword).
+                        match(/0-9/)&&String(newPassword).match(/.[!,@,#,$,%,^,&,*,?,_,~]/)){
+                    db.updateOne(dbName,colName,
+                    "{id:"+id+"},{$set:{salt:"+temp1+",userPassword:"+nHashedPass+"}}"
+                            ,function(){
+                                callback({'response':"Password Sucessfully Changed",'res':true})
+                            });
+                    
+                        
+                  
+                        }else{
+                            callback({'response':"New Password is Weak. Try a Strong Password !",'res':false});
+                        }
+            }else{
+                callback({'response':"Passwords do not match. Try Again !",'res':false});
+            }
+        }else{
+            callback({'response':"Error while changing password",'res':false});
+        }
+    });
 
 };
+
+exports.resetPasword = function(){};

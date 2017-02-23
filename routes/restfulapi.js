@@ -16,9 +16,11 @@ app.post('/signup', function (req, res) {
    pass = req.body.password;
    ucountry = req.body.country;
    ucity = req.body.city;
-   signupLoginOpt.signup(fname,lname,umail,pass,ucountry,ucity, function(user){
+   ugender = req.body.gender;
+   signupLoginOpt.signup(fname,lname,umail,pass,ucountry,ucity,ugender, function(user){
        res.json(user);
    });
+  
    
 });
 
@@ -29,11 +31,10 @@ app.post('/login', function(req, res){
     signupLoginOpt.login(umail, pass,function(userProfile){
         res.json(userProfile);
     });
+    
 });
 
-app.get('/data', function (req, res) {
-    res.json({"title": "hello"});
-});
+
 };
 
 module.exports = restRouter;
