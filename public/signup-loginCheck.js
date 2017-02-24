@@ -34,8 +34,9 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
 
     var email = userEmail;
     if ((Array(email).indexOf('@') !== Array(email).length)) {
-        if (Array(userPassword).length > 6 && String(userPassword).match(/([a-z].*[A-Z])|([A-Z].*[a-z])/
-                )) {
+        if (String(userPassword).match(/([a-z].*[A-Z])|([A-Z].*[a-z])/
+                )&&(Array(userPassword).length > 6)&&String(userPassword).match(/[0-9]/)
+                &&String(userPassword).match(/.[!,@,#,$,%,^,&,*,?,_,~]/) ) {
             var temp, hashedPassword, newPass, token;
             temp = rand(160, 36);
             newPass = userPassword + temp;
@@ -43,7 +44,7 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
                     digest('hex');
             hashedPassword = crypto.createHash('sha512').update(newPass).
                     digest('hex');
-            db.find(dbName, colName, {'userMail': userEmail}, function (users) {
+            db.find(colName, {'userMail': userEmail}, function (users) {
                 var len = Array(users).length;
                 if (len === 0) {
                     addUser.createUser(firstName, lastName, userEmail

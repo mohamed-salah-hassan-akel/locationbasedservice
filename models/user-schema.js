@@ -36,11 +36,11 @@ exports.createUser = function (firstName, lastname, eMail,
         {
             'userId': userId,
             'userQueries': [
-                {'queryTxt': queryText, 'filtersKeywords': keywords}
+                {'queryTxt': "", 'filtersKeywords':""}
             ]
         }, {
             'user_id': userId,
-            'rated_places': [{'place_id': placeID, 'rating_score': score, 'rate_time': rateTime}]
+            'rated_places': [{'place_id': "", 'rating_score': "", 'rate_time': ""}]
         }];
     callback(user);
 
