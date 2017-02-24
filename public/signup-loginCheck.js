@@ -30,13 +30,18 @@ var nodemailer = require('nodemailer');
 
 exports.signup = function (firstName, lastName, userEmail, userPassword, country,
         city,gender,signcallback) {
-
-
+            firstName = String(firstName);
+            lastName = String(lastName);
+            userEmail = String(userEmail);
+            userPassword = String(userPassword);
+            country = String(country);
+            city = String(city);
+            gender = String(gender);
     var email = userEmail;
-    if ((Array(email).indexOf('@') !== Array(email).length)) {
-        if (String(userPassword).match(/([a-z].*[A-Z])|([A-Z].*[a-z])/
-                )&&(Array(userPassword).length > 6)&&String(userPassword).match(/[0-9]/)
-                &&String(userPassword).match(/.[!,@,#,$,%,^,&,*,?,_,~]/) ) {
+    if (email.indexOf('@')!== userEmail.length) {
+        if (userPassword.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/
+                )&&(userPassword.length > 6)&& userPassword.match(/[0-9]/)
+                &&userPassword.match(/.[!,@,#,$,%,^,&,*,?,_,~]/) ) {
             var temp, hashedPassword, newPass, token;
             temp = rand(160, 36);
             newPass = userPassword + temp;
@@ -45,15 +50,15 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
             hashedPassword = crypto.createHash('sha512').update(newPass).
                     digest('hex');
             db.find(colName, {'userMail': userEmail}, function (users) {
-                var len = Array(users).length;
-                if (len === 0) {
+               
+                if (!users) {
                     addUser.createUser(firstName, lastName, userEmail
                             , hashedPassword, country, city,gender, token, temp, function (err, user) {
                                 assert.equal(null, err);
                                 db.insert( colName, user,function(){
-                                    signcallback({'res': 'Successfully Registered'});
+                                   
                                 });
-                                
+                                 signcallback({'res': 'Successfully Registered'});
                             });
 
 

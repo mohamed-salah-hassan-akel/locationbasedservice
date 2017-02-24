@@ -17,12 +17,11 @@ exports.find = function (colName,query,callback){
     });
 };
 
-exports.Insert = function(colName,query,callback){
+exports.insert = function(colName,query,callback){
     MongoClient.connect(dbUrl, function(err,db){
         assert.equal(null,err);
         db.collection(colName).insertMany(query,function(err,result){
             assert.equal(err,null);
-            console.log("inserted sucessfully");
             callback();
         });
         db.close();
