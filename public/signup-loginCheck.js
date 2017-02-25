@@ -1,5 +1,4 @@
 var validator = require('validator');
-var owasp = require('owasp-password-strength-test');
 // hashing module
 var crypto = require('crypto');
 // add user in database object
@@ -47,13 +46,15 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
                     digest('hex');
             db.find(colName, {'userMail': userEmail}, function (users) {
                
-                if (!users) {
+                if (users.length===0) {
+                   
                     addUser.createUser(firstName, lastName, userEmail
                             , hashedPassword, country, city,gender, token, temp, function ( user) {
                                 
                                 db.insert( colName, user);
-                                 signcallback({'res': 'Successfully Registered'});
+                                 
                             });
+                            signcallback({'res': 'Successfully Registered'});
 
 
                 } else {
@@ -73,6 +74,7 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
         }
     } else {
         signcallback({'res': 'Email Invalid'});
+        
     }
 };
 /*
@@ -81,16 +83,21 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
 exports.login = function(umail,password, callback){
     
     db.find(colName, {userMail:umail}, function(user){
-        if(user){
-            var temp = user.salt;
-            var hashDb = user.userPassword;
-            var id = user.token;
-            var newPass = temp + password;
+        
+        if(user.length!==0){
+            var temp = user[0].salt;
+            ;
+            var hashDb = user[0].userPassword;
+            var id = user[0].token;
+            var newPass = password + temp;
             var hashedPass = crypto.createHash('sha512').update(String(newPass))
                     .digest("hex");
             var grav_url = gravater.url(umail,{s:'200', r:'pg', d:'404}'});
             if(hashDb == hashedPass){
-                callback([{'response':"Login Sucess",'res':true,'token':id,'grav':grav_url},user]);
+                db.find(colName,{userId:user[0].id}, function(userDet){
+                    callback([{'response':"Login Sucess",'res':true,'token':id,'grav':grav_url},user,userDet]);
+                });
+                
             }
             else{
                 callback({'response':"Invalid Password",'res':false});
