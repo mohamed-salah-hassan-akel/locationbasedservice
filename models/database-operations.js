@@ -1,28 +1,25 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-
 var dbUrl = 'mongodb://salah:programming2015@ds139909.mlab.com:39909/locationappdb';
 
 exports.find = function (colName,query,callback){
     MongoClient.connect(dbUrl, function (err,db){
         assert.equal(null,err);
-        var cursor = db.collection(colName).find(query);
-        cursor.each(function (err, doc){
+        db.collection(colName).find(query).toArray(function(err,docs){
             assert.equal(null,err);
-            if(doc!==null){
-                callback(doc);
-            }else{callback();}
+            callback(docs);
         });
-        db.close();
+        
     });
 };
 
-exports.insert = function(colName,query,callback){
+exports.insert = function(colName,query){
     MongoClient.connect(dbUrl, function(err,db){
         assert.equal(null,err);
-        db.collection(colName).insertMany(query,function(err,result){
+        db.collection(colName).insertMany(query,function(err){
             assert.equal(err,null);
-            callback();
+            console.log("inserted sucessfully");
+            
         });
         db.close();
     });
@@ -35,9 +32,9 @@ exports.insert = function(colName,query,callback){
  */
 exports.updateOne = function(colName,query,callback){
    MongoClient.connect(dbUrl, function(err,db){
-       assert.equal(err,null);
+       assert.equal(null,err);
        db.collection(colName).updateOne(query, function(err,results){
-           assert.equal(err,null);
+           assert.equal(null,err);
            console.log(results);
            callback();
        });
@@ -47,9 +44,9 @@ exports.updateOne = function(colName,query,callback){
 
 exports.updateMany = function(colName,query,callback){
    MongoClient.connect(dbUrl, function(err,db){
-       assert.equal(err,null);
+       assert.equal(null,err);
        db.collection(colName).updateMany(query, function(err,results){
-           assert.equal(err,null);
+           assert.equal(null,err);
            console.log(results);
            callback();
        });
@@ -59,8 +56,9 @@ exports.updateMany = function(colName,query,callback){
 
 exports.deleteOne = function(colName,query,callback){
     MongoClient.connect(dbUrl, function(err,db){
-        assert.equal(err,null);
+        assert.equal(null,err);
         db.collection(colName).deleteOne(query, function(err,results){
+            assert.equal(null,err);
             console.log(results);
             callback();
         });

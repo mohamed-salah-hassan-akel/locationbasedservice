@@ -7,7 +7,7 @@
 
 var counter = 0;
 exports.createUser = function (firstName, lastname, eMail,
-        password, country, city, gender, userToken, userSalt, callback) {
+        password, country, city, gender, userToken, userSalt, usercallback) {
     var userId = 'loc_user' + (counter + 1) + 'lW';
 
     var user = [{
@@ -42,7 +42,7 @@ exports.createUser = function (firstName, lastname, eMail,
             'user_id': userId,
             'rated_places': [{'place_id': "", 'rating_score': "", 'rate_time': ""}]
         }];
-    callback(user);
+    usercallback(user);
 
 };
 

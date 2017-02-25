@@ -1,3 +1,5 @@
+var validator = require('validator');
+var owasp = require('owasp-password-strength-test');
 // hashing module
 var crypto = require('crypto');
 // add user in database object
@@ -12,7 +14,7 @@ var rand = require('csprng');
 
 var gravater = require('gravatar');
 
-var nodemailer = require('nodemailer');
+//var nodemailer = require('nodemailer');
 
 /*var smtpTransport = nodemailer.createTransport("SMTP",{
     auth:{
@@ -30,18 +32,12 @@ var nodemailer = require('nodemailer');
 
 exports.signup = function (firstName, lastName, userEmail, userPassword, country,
         city,gender,signcallback) {
-            firstName = String(firstName);
-            lastName = String(lastName);
-            userEmail = String(userEmail);
-            userPassword = String(userPassword);
-            country = String(country);
-            city = String(city);
-            gender = String(gender);
-    var email = userEmail;
-    if (email.indexOf('@')!== userEmail.length) {
-        if (userPassword.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/
-                )&&(userPassword.length > 6)&& userPassword.match(/[0-9]/)
-                &&userPassword.match(/.[!,@,#,$,%,^,&,*,?,_,~]/) ) {
+           userPassword = String(userPassword);
+    
+    if (validator.isEmail(userEmail)) {
+        if (userPassword.length> 6) {
+            if(userPassword.match(/[0-9]/)&&userPassword.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)){
+                if(userPassword.match(/.[!,@,#,$,%,^,&,*,?,_,~]/)){
             var temp, hashedPassword, newPass, token;
             temp = rand(160, 36);
             newPass = userPassword + temp;
@@ -53,11 +49,9 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
                
                 if (!users) {
                     addUser.createUser(firstName, lastName, userEmail
-                            , hashedPassword, country, city,gender, token, temp, function (err, user) {
-                                assert.equal(null, err);
-                                db.insert( colName, user,function(){
-                                   
-                                });
+                            , hashedPassword, country, city,gender, token, temp, function ( user) {
+                                
+                                db.insert( colName, user);
                                  signcallback({'res': 'Successfully Registered'});
                             });
 
@@ -66,10 +60,16 @@ exports.signup = function (firstName, lastName, userEmail, userPassword, country
                     signcallback({'res': 'Email Already Registered'});
                 }
             });
+        }else{
+            signcallback({'res':'Password Should be contain at least one special character'});
+        }
+        }else{
+            signcallback({'res':'Password should be contains at least one capital character'});
+        }
 
 
         } else {
-            signcallback({'res': 'Password Weak '});
+            signcallback({'res': 'Password should be at least 7 digits and charaters '});
         }
     } else {
         signcallback({'res': 'Email Invalid'});
@@ -90,7 +90,7 @@ exports.login = function(umail,password, callback){
                     .digest("hex");
             var grav_url = gravater.url(umail,{s:'200', r:'pg', d:'404}'});
             if(hashDb == hashedPass){
-                callback({'response':"Login Sucess",'res':true,'token':id,'grav':grav_url});
+                callback([{'response':"Login Sucess",'res':true,'token':id,'grav':grav_url},user]);
             }
             else{
                 callback({'response':"Invalid Password",'res':false});
@@ -119,7 +119,7 @@ exports.changePassword = function (id, oldPass,newPassword,callback) {
                     db.updateOne(colName,
                     "{id:"+id+"},{$set:{salt:"+temp1+",userPassword:"+nHashedPass+"}}"
                             ,function(){
-                                callback({'response':"Password Sucessfully Changed",'res':true})
+                                callback({'response':"Password Sucessfully Changed",'res':true});
                             });
                     
                         

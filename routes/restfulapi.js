@@ -9,25 +9,17 @@ var restRouter = function (app){
 
 // POST Method to enter user details and then will be stroed in database
 app.post('/signup', function (req, res) {
-   var newUser = {
-       fname:String,
-       lname:String,
-       umail:String,
-       pass:String,
-       ucountry :String,
-       ucity:String,
-        ugende:String
-   }
-   newUser.fname = req.body.userFname;
-   newUser.lname = req.body.userLname;
-   newUser.umail = req.body.email;
-   newUser.pass = req.body.password;
-   newUser.ucountry = req.body.country;
-   newUser.ucity = req.body.city;
-   newUser.ugender = req.body.gender;
-   signupLoginOpt.signup(newUser.fname,newUser.lname,newUser.umail,newUser.pass,
-   newUser.ucountry,newUser.ucity,newUser.ugender, function(user){
-       res.json(user);
+  var fname,lname,umail,pass,ucountry,ucity,ugender;
+   fname = req.body.userFname;
+   lname = req.body.userLname;
+   umail = req.body.email;
+   pass = req.body.password;
+   ucountry = req.body.country;
+   ucity = req.body.city;
+   ugender = req.body.gender;
+   signupLoginOpt.signup(fname,lname,umail,pass,
+   ucountry,ucity,ugender, function(user){
+        res.json(user);
    });
   
    
