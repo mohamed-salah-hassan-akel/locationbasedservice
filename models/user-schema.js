@@ -5,10 +5,10 @@
  * @param userCallback - to execute calback on user object and retrieve it
  */
 
-var counter = 0;
+var rand =0;
 exports.createUser = function (firstName, lastname, eMail,
-        password, country, city, gender, userToken, userSalt, usercallback) {
-    var userId = 'loc_user' + (counter + 1) + 'lW';
+        password,birthdate, country, city, gender, userToken, userSalt, usercallback) {
+    var userId = 'loc_user'+ (rand = rand +1 ) + 'lW5qwi781861dcn';
 
     var user = [{
             'id': userId,
@@ -16,8 +16,10 @@ exports.createUser = function (firstName, lastname, eMail,
                 'fName': firstName,
                 'lName': lastname
             },
+            userBirthdate:birthdate,
             'token': userToken,
-            'salt': userSalt
+            'salt': userSalt,
+            'tempCode':""
             ,
             'userMail': eMail,
             'userPassword': password,
@@ -26,21 +28,22 @@ exports.createUser = function (firstName, lastname, eMail,
                 'userCity': city
             },
             'userGender': gender
-            , 'favoritList': [{'place_id': ""}],
-            'visitedPlces': [{'place_id': "", 'visiting_date': ""}],
-            'checkIns': [{
-                    'placeId': ""
-
-                }]
+            , 'favoritList': [{'placeId': ""}],
+            'visitedPlces': [{'placeId': "", 'visitingDate': ""}],
+            'checkIns': []
         },
         {
-            'userId': userId,
-            'userQueries': [
-                {'queryTxt': "", 'filtersKeywords':""}
-            ]
+            'userQueriesId': userId,
+            'userQueries': []
         }, {
-            'user_id': userId,
-            'rated_places': [{'place_id': "", 'rating_score': "", 'rate_time': ""}]
+            'userRatesId': userId,
+            'ratedPlaces': []
+        },{
+            'userProImgId':userId,
+            'profileImg':[]
+        },{
+            'userFollowresId':userId,
+            'userFollow':[]
         }];
     usercallback(user);
 

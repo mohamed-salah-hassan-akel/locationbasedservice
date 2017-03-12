@@ -1,7 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var dbUrl = 'mongodb://salah:programming2015@ds139909.mlab.com:39909/locationappdb';
-
+var dbUrl = 'mongodb://localhost:27017/test'; 
+// realUrl  : mongodb://salah:programming2015@ds139909.mlab.com:39909/locationappdb
 exports.find = function (colName,query,callback){
     MongoClient.connect(dbUrl, function (err,db){
         assert.equal(null,err);
@@ -31,12 +31,13 @@ exports.insert = function(colName,query){
  * 
  * 
  */
-exports.updateOne = function(colName,query,callback){
+exports.updateOne = function(colName,qpart1,qpart2,callback){
    MongoClient.connect(dbUrl, function(err,db){
        assert.equal(null,err);
-       db.collection(colName).updateOne(query, function(err,results){
+       
+       db.collection(colName).updateOne(qpart1,qpart2, function(err,results){
            assert.equal(null,err);
-           console.log(results);
+           console.log(results.toString());
            callback();
        });
        db.close();
@@ -66,3 +67,4 @@ exports.deleteOne = function(colName,query,callback){
         db.close();
     });
 };
+
