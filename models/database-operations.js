@@ -1,6 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var dbUrl = 'mongodb://localhost:27017/test'; 
+var dbUrl = 'mongodb://salah:programming2015@ds139909.mlab.com:39909/locationappdb'; 
 // realUrl  : mongodb://salah:programming2015@ds139909.mlab.com:39909/locationappdb
 exports.find = function (colName,query,callback){
     MongoClient.connect(dbUrl, function (err,db){
