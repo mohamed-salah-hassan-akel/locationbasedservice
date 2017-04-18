@@ -3,12 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Work/mobile%20app/fierce-peak-31105/public/profileOperations.js</file>
-            <file>file:/D:/Work/mobile%20app/fierce-peak-31105/models/user-schema.js</file>
-            <file>file:/D:/Work/mobile%20app/fierce-peak-31105/public/signup-loginCheck.js</file>
-            <file>file:/D:/Work/mobile%20app/fierce-peak-31105/routes/restfulapi.js</file>
-            <file>file:/D:/Work/mobile%20app/fierce-peak-31105/public/searching-service.js</file>
-            <file>file:/D:/Work/mobile%20app/fierce-peak-31105/models/database-operations.js</file>
+            <file>file:/media/salah-lab/Mohamed-Salah/Work/mobile%20app/geo-app-service/public/profileOperations.js</file>
+            <file>file:/media/salah-lab/Mohamed-Salah/Work/mobile%20app/geo-app-service/routes/restfulapi.js</file>
+            <file>file:/media/salah-lab/Mohamed-Salah/Work/mobile%20app/geo-app-service/models/userPlace-schema.js</file>
+            <file>file:/media/salah-lab/Mohamed-Salah/Work/mobile%20app/geo-app-service/public/searching-service.js</file>
+            <file>file:/media/salah-lab/Mohamed-Salah/Work/mobile%20app/geo-app-service/public/signup-loginCheck.js</file>
         </group>
     </open-files>
 </project-private>

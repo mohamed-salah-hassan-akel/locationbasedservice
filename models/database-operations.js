@@ -1,11 +1,22 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var dbUrl = 'mongodb://salah:programming2015@ds139909.mlab.com:39909/locationappdb'; 
+var dbUrl = 'mongodb://localhost:27017/salah'; 
 // realUrl  : mongodb://salah:programming2015@ds139909.mlab.com:39909/locationappdb
 exports.find = function (colName,query,callback){
     MongoClient.connect(dbUrl, function (err,db){
         assert.equal(null,err);
-        db.collection(colName).find(query,{_id:0}).toArray(function(err,docs){
+        db.collection(colName).find(query).toArray(function(err,docs){
+            assert.equal(null,err);
+            
+            callback(docs);
+        });
+        
+    });
+};
+exports.findProjection = function(colName,query,projection,callback){
+     MongoClient.connect(dbUrl, function (err,db){
+        assert.equal(null,err);
+        db.collection(colName).find(query,projection).toArray(function(err,docs){
             assert.equal(null,err);
             
             callback(docs);

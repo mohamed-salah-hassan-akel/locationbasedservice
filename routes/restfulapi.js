@@ -1,6 +1,7 @@
-
+var countries = require('../countries'), cities = require('../cities');
 var signupLoginOpt = require('../public/signup-loginCheck');
 var profile = require('../public/profileOperations');
+var places = require('../public/searching-service');
 var restRouter = function (app){
     app.get('/', function(req,res){
     res.send("Geo-location API Welcome you to our space");
@@ -48,7 +49,7 @@ app.post('/chgprofilpic',function(req,res){
         res.json(profilePic);
     });
 });
-app.post('/chgProfilName',function(req,res){
+app.post('/chgProfileName',function(req,res){
     var userId =req.body.id, firstName = req.body.fName, lastName = req.body.lName;
     profile.changeProfileName(userId,firstName,lastName,function(profileName){
         res.json(profileName);
@@ -67,10 +68,17 @@ app.post('/saveUserRates', function(req,res){
             res.json(rates);
         });
 });
-app.post('/saveUserVisits',function(req,res){
+app.post('/saveUserFavorits',function(req,res){
     var userId = req.body.id, userPlaceId = req.body.placeId;
-    profile.saveUserFavorits(userId,userPlaceId,function(favorit){
+    var placeDate = req.body.date;
+    profile.saveUserFavorits(userId,userPlaceId,placeDate,function(favorit){
         res.json(favorit);
+    });
+});
+app.post('/saveUserVisitedPlaces', function(req,res){
+    var userID= req.body.id, userPlaceId = req.body.placeId,visiteTime = req.body.visitDate;
+    profile.saveUserVisitedPlaces(userID,userPlaceId, visiteTime,function(visitedPlace){
+        res.json(visitedPlace);
     });
 });
 app.post('/saveUserQueries',function(req, res){
@@ -86,6 +94,90 @@ app.post('/saveUserFollow',function(req,res){
         res.json(friend);
     });
 });
+app.post('/changeUserPassword',function(req,res){
+    var userId = req.body.id, userOldPassword = req.body.oldPassword, 
+        userNewPass = req.body.newPassword; 
+   signupLoginOpt.changePassword(userId,userOldPassword,userNewPass,function(userChgPass){
+       res.json(userChgPass);
+   }) ;
+});
+app.post('/getUser',function(req,res){
+   var userId = req.body.id;
+   profile.getUserData(userId,function(userData){
+       res.json(userData);
+   });
+});
+app.post('/getUserFollow',function(req,res){
+    var userId = req.body.id;
+    profile.getUsersFollow(userId,function(users){
+        res.json(users);
+    });
+});
+app.post('/getUserRates', function(req,res){
+    var userId = req.body.id;
+    profile.getUserRates(userId, function(rates){
+        res.json(rates);
+    });
+});
+app.post('/getUserFavorits', function(req,res){
+    var userId = req.body.id;
+    profile.getUserFavorits(userId, function(favorits){
+        res.json(favorits);
+    });
+});
+
+app.post('/getUserVisitedPlaces',function(req,res){
+    var userId = req.body.id;
+    profile.getUserVisitedPlaces(userId,function(visitedPlaces){
+        res.json(visitedPlaces);
+    });
+});
+app.post('/getNumberOfFollowers', function(req,res){
+    var userId = req.body.id;
+    profile.getNumberOfFollowers(userId,function(followersNumber){
+        res.json(followersNumber);
+    });
+});
+app.post('/getUserFollowers',function (req,res){
+    var userId = req.body.id;
+    profile.getUserFollowers(userId, function(userFollowers){
+        res.json(userFollowers);
+    });
+});
+app.post('/confirmatioCodeAcceptance',function(req,res){
+    var userMail = req.body.email, confrimationCode = req.body.code;
+    signupLoginOpt.confirmatioCodeAcceptance(userMail,confrimationCode,function(confirmUser){
+        res.json(confirmUser);
+    });
+    
+});
+app.post('/getPlaces',function(req,res){
+    var pQuery, lang,  pKeyword, pRadius, rankBy,
+    pLocation, minPrice, maxPrice, openNow, pType;
+    pQuery = req.body.query;
+    lang = req.body.language;
+    pKeyword = req.body.keyword;
+    pRadius = req.body.radius;
+    rankBy = req.body.rankby;
+    pLocation = req.body.location;
+    minPrice = req.body.minprice;
+    maxPrice = req.body.maxprice;
+    openNow = req.body.opennow;
+    pType = req.body.type;
+    places.searchForPlace(pQuery, lang,  pKeyword, pRadius, rankBy,
+    pLocation, minPrice, maxPrice, openNow, pType,function(place){
+        res.json(place);
+    });
+    
+});
+app.get('/getCountries',function(req,res){
+   res.json(countries); 
+});
+app.get('/getCities',function(req,res){
+    res.json(cities);
+});
 };
+
+
 
 module.exports = restRouter;
