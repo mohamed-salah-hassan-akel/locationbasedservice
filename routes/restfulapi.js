@@ -151,24 +151,61 @@ app.post('/confirmatioCodeAcceptance',function(req,res){
     });
     
 });
-app.post('/getPlaces',function(req,res){
-    var pQuery, lang,  pKeyword, pRadius, rankBy,
-    pLocation, minPrice, maxPrice, openNow, pType;
+app.post('/getPlacesNearby',function(req,res){
+    var lang,  pKeyword, pRadius,
+    pLocation, pType;
+    pKeyword = req.body.keyword;
+     lang = req.body.language;
+     pLocation = req.body.location;
+    pRadius = req.body.radius;
+    pType = req.body.type;
+    places.searchForPlaceNearby(lang,  pKeyword, pRadius,
+    pLocation, pType,function(places){
+        res.json(places);
+    });
+    
+    
+});
+app.post('/getPlacesByQuery',function(req,res){
+    var pQuery,lang,  pRadius,
+    minPrice,maxPrice,openNow,pLocation, pType;
     pQuery = req.body.query;
     lang = req.body.language;
-    pKeyword = req.body.keyword;
+    pLocation = req.body.location;
     pRadius = req.body.radius;
+    minPrice = req.body.minprice;
+    maxPrice = req.body.maxprice;
+    openNow = req.body.opennow;
+    pType = req.body.type;
+    places.searchPlacesQuery(pQuery,lang,pLocation,pRadius,minPrice,maxPrice,openNow,pType,function(placesQuery){
+        res.json(placesQuery);
+    });
+    
+    
+});
+app.post('/getPlacesNearbyRankedBy',function(req,res){
+    var lang,  rankBy,
+    minPrice,maxPrice,openNow,pLocation, pType;
+    lang = req.body.language;
     rankBy = req.body.rankby;
     pLocation = req.body.location;
     minPrice = req.body.minprice;
     maxPrice = req.body.maxprice;
     openNow = req.body.opennow;
     pType = req.body.type;
-    places.searchForPlace(pQuery, lang,  pKeyword, pRadius, rankBy,
-    pLocation, minPrice, maxPrice, openNow, pType,function(place){
-        res.json(place);
+    
+    places.placeNearbyRankby(lang,  rankBy,
+    minPrice,maxPrice,openNow,pLocation, pType,function(places){
+        res.json(places);
     });
     
+});
+
+app.post('/getPlaceDetails',function(req,res){
+    var placeId = req.body.placeid, pLang = req.body.language;
+    places.placeDetails(placeId,pLang,function(placeDetails){
+        res.json(placeDetails);
+    });
 });
 app.get('/getCountries',function(req,res){
    res.json(countries); 

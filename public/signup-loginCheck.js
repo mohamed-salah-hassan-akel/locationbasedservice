@@ -112,7 +112,7 @@ exports.signup = function (firstName, lastName, userEmail, userPass, birthdate, 
  */
 exports.login = function (umail, password, callback) {
 
-    db.findProjection(colName, {userMail: umail},{tempCode:0,_id:0}, function (user) {
+    db.findProjection(colName, {userMail: umail}, {tempCode: 0, _id: 0}, function (user) {
         if (user.length != 0) {
             var temp = user[0].salt;
             var hashDb = user[0].userPassword;
@@ -122,17 +122,17 @@ exports.login = function (umail, password, callback) {
                     .digest("hex");
             var grav_url = gravater.url(umail, {s: '200', r: 'pg', d: '404}'});
             if (hashDb === hashedPass) {
-                db.findProjection(colName,{token:id},{favoritList: 0,
-                        visitedPlces: 0, checkIns: 0, userAddress:0,userGender:0,userPassword:0,tempCode: 0, userBirthdate: 0, salt: 0, token: 0, userMail: 0,name:0},function(data){
-                            
-                                       
-                                           
-                                            callback({'response': "Login Sucess", 'res': true, 'token': id, userId:data,'grav': grav_url});
-                                        
-					
-			});
-                    
-                
+                db.findProjection(colName, {token: id}, {favoritList: 0,
+                    visitedPlces: 0, checkIns: 0, userAddress: 0, userGender: 0, userPassword: 0, tempCode: 0, userBirthdate: 0, salt: 0, token: 0, userMail: 0, name: 0}, function (data) {
+
+
+
+                    callback({'response': "Login Sucess", 'res': true, 'token': id, userId: data, 'grav': grav_url});
+
+
+                });
+
+
 
             } else {
                 callback([{'response': "invalid Password", 'res': false}]);
@@ -148,7 +148,7 @@ exports.changePassword = function (userId, oldPass, newPassword, callback) {
     var newPass = newPassword + temp1;
     var nHashedPass = crypto.createHash('sha512').update(newPass).digest('hext');
     db.find(colName, {_id: userId}, function (user) {
-           var nPass= String(newPass);
+        var nPass = String(newPass);
         if (user.length != 0) {
             var temp = user[0].salt;
             var hashedDb = user[0].userPassword;
@@ -156,34 +156,34 @@ exports.changePassword = function (userId, oldPass, newPassword, callback) {
             var oHashedPass = crypto.createHash('sha512').update(oldNewPass)
                     .digest('hex');
             if (hashedDb === oHashedPass) {
-                if (nPass.length > 6 ){
-                    
-                if(nPass.
-                        match(/[0-9]/) && nPass.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)){
-                    
-                
-                     if(nPass.match(/.[!,@,#,$,%,^,&,*,?,_,~,+,-,/,.]/) ){
-                        
-                    db.updateOne(colName,
-                            {_id: userId}, {$set: {salt: temp1, userPassword: nHashedPass}}
-                    , function () {
-                        callback({'response': "Password Sucessfully Changed", 'res': true});
-                    });
+                if (nPass.length > 6) {
+
+                    if (nPass.
+                            match(/[0-9]/) && nPass.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) {
+
+
+                        if (nPass.match(/.[!,@,#,$,%,^,&,*,?,_,~,+,-,/,.]/)) {
+
+                            db.updateOne(colName,
+                                    {_id: userId}, {$set: {salt: temp1, userPassword: nHashedPass}}
+                            , function () {
+                                callback({'response': "Password Sucessfully Changed", 'res': true});
+                            });
 
 
 
+                        } else {
+                            callback({'response': "PasswordPassword Should be contain at least one special character"});
+                        }
+                    } else {
+                        callback({'response': 'Password should be contains at least one capital character'});
+                    }
                 } else {
-                    callback({'response': "PasswordPassword Should be contain at least one special character"});
+                    callback({'response': 'Password should be more than 6 digits and characters'});
                 }
             } else {
-                callback({'response':'Password should be contains at least one capital character'});
+                callback({'response': "Passwords do not match. Try Again !", 'res': false});
             }
-        }else{
-            callback({'response':'Password should be more than 6 digits and characters'});
-        }
-        }else{
-            callback({'response': "Passwords do not match. Try Again !", 'res': false});
-        }
         } else {
             callback({'response': "Error while changing password", 'res': false});
         }
