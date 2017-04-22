@@ -123,7 +123,7 @@ exports.login = function (umail, password, callback) {
             var grav_url = gravater.url(umail, {s: '200', r: 'pg', d: '404}'});
             if (hashDb === hashedPass) {
                 db.findProjection(colName, {token: id}, {favoritList: 0,
-                    visitedPlces: 0, checkIns: 0, userAddress: 0, userGender: 0, userPassword: 0, tempCode: 0, userBirthdate: 0, salt: 0, token: 0, userMail: 0, name: 0}, function (data) {
+                    visitedPlces: 0, checkIns: 0, userAddress: 0, userGender: 0, userPassword: 0, tempCode: 0, userBirthdate: 0, salt: 0, token: 0}, function (data) {
 
 
 
